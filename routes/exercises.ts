@@ -25,4 +25,13 @@ router.get("/", (req, res) => {
   return res.send(exercises);
 });
 
+router.get("/:id", (req, res) => {
+  const exercise = exercises.find((exercise) => exercise.id === req.params.id);
+
+  if (!exercise)
+    return res.status(404).send("The exercise with the given id was not found");
+
+  return res.send(exercise);
+});
+
 export default router;
