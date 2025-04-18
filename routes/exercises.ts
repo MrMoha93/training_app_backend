@@ -7,7 +7,7 @@ interface ExirciseSet {
   reps: number;
 }
 
-interface Exercise {
+export interface Exercise {
   id: string;
   name: string;
   sets: ExirciseSet[];
