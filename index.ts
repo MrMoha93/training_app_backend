@@ -4,6 +4,7 @@ import sessions from "./routes/sessions";
 
 const app = express();
 
+app.use(express.json());
 app.use("/api/exercises", exercises);
 app.use("/api/sessions", sessions);
 
