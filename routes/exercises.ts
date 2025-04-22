@@ -70,4 +70,28 @@ router.post("/", (req, res) => {
   return res.status(201).send(exercise);
 });
 
+router.put("/:id", (req, res) => {
+  const exercise = exercises.find((exercise) => exercise.id === req.params.id);
+
+  if (!exercise)
+    return res.status(404).send("The exercise with the given id was not found");
+
+  const validation = validate(req.body);
+
+  if (!validation.success) return res.status(400).send(validation.error.issues);
+
+  const session = getSessions().find(
+    (session) => session.id === req.body.sessionId
+  );
+
+  if (!session)
+    return res.status(404).send("The session with the given id was not found");
+
+  exercise.name = req.body.name;
+  exercise.sets = req.body.sets;
+  exercise.sessionId = req.body.sessionId;
+
+  return res.send(exercise);
+});
+
 export default router;
