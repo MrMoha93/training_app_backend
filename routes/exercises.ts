@@ -94,4 +94,15 @@ router.put("/:id", (req, res) => {
   return res.send(exercise);
 });
 
+router.delete("/:id", (req, res) => {
+  const exercise = exercises.find((exercise) => exercise.id === req.params.id);
+
+  if (!exercise)
+    return res.status(404).send("The exercise with the given id was not found");
+
+  exercises.splice(exercises.indexOf(exercise), 1);
+
+  return res.send(exercise);
+});
+
 export default router;
