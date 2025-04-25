@@ -1,30 +1,11 @@
 import express from "express";
+import { PrismaClient } from "@prisma/client";
 
 const router = express.Router();
+const prisma = new PrismaClient();
 
-export interface SessionFormData {
-  id?: string;
-  name: string;
-  exerciseIds: string[];
-}
-
-export interface Session {
-  id: string;
-  name: string;
-}
-
-const sessions: Session[] = [
-  { id: "1", name: "Monday" },
-  { id: "2", name: "Tuesday" },
-  { id: "3", name: "Thursday" },
-  { id: "4", name: "Saturday" },
-  { id: "5", name: "Sunday" },
-];
-export function getSessions() {
-  return sessions;
-}
-
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const sessions = await prisma.session.findMany();
   return res.send(sessions);
 });
 
