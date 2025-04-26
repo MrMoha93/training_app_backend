@@ -1,12 +1,12 @@
 import express from "express";
 import exercises from "./routes/exercises";
-import sessions from "./routes/sessions";
+import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use("/api/exercises", exercises);
-app.use("/api/sessions", sessions);
 
 const PORT = 6688;
 

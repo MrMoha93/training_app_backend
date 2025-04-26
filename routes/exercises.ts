@@ -12,7 +12,7 @@ interface SetFormData {
 
 router.get("/", async (req, res) => {
   const exercises = await prisma.exercise.findMany({
-    include: { session: true, sets: true },
+    include: { sets: true },
   });
   return res.send(exercises);
 });
@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const exercise = await prisma.exercise.findFirst({
     where: { id: req.params.id },
-    include: { session: true, sets: true },
+    include: { sets: true },
   });
 
   if (!exercise)
@@ -34,17 +34,10 @@ router.post("/", async (req, res) => {
 
   if (!validation.success) return res.status(400).send(validation.error.issues);
 
-  const session = await prisma.session.findFirst({
-    where: { id: req.body.sessionId },
-  });
-
-  if (!session)
-    return res.status(404).send("The session with the given id was not found");
-
   const exercise = await prisma.exercise.create({
     data: {
       name: req.body.name,
-      sessionId: req.body.sessionId,
+      ...(req.body.date && { date: new Date(req.body.date) }),
       sets: {
         create: req.body.sets.map((set: SetFormData) => ({
           weight: set.weight,
@@ -53,7 +46,6 @@ router.post("/", async (req, res) => {
       },
     },
     include: {
-      session: true,
       sets: true,
     },
   });
@@ -73,18 +65,11 @@ router.put("/:id", async (req, res) => {
 
   if (!validation.success) return res.status(400).send(validation.error.issues);
 
-  const session = await prisma.session.findFirst({
-    where: { id: req.body.sessionId },
-  });
-
-  if (!session)
-    return res.status(404).send("The session with the given id was not found");
-
-  const updatedFood = await prisma.exercise.update({
+  const updatedExercise = await prisma.exercise.update({
     where: { id: req.params.id },
     data: {
       name: req.body.name,
-      sessionId: req.body.sessionId,
+      date: new Date(req.body.date),
       sets: {
         create: req.body.sets.map((set: SetFormData) => ({
           weight: set.weight,
@@ -94,7 +79,7 @@ router.put("/:id", async (req, res) => {
     },
   });
 
-  return res.send(updatedFood);
+  return res.send(updatedExercise);
 });
 
 router.delete("/:id", async (req, res) => {

@@ -7,8 +7,8 @@ const setSchema = z.object({
 
 const schema = z.object({
   id: z.string().optional(),
+  date: z.string().optional(),
   name: z.string().min(1, { message: "Name is required" }),
-  sessionId: z.string().min(1, { message: "You must select a session" }),
   sets: z.array(setSchema),
 });
 

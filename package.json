@@ -11,11 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.6.0",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "prisma": "^6.6.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "nodemon": "^3.1.9",
     "typescript": "^5.8.3"
