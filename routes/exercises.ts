@@ -17,6 +17,27 @@ router.get("/", async (req, res) => {
   return res.send(exercises);
 });
 
+router.post("/:id/sets", async (req, res) => {
+  const exercise = await prisma.exercise.findFirst({
+    where: { id: req.params.id },
+  });
+
+  if (!exercise)
+    return res.status(404).send("The exercise with the given id was not found");
+
+  const { weight, reps } = req.body;
+
+  const set = await prisma.set.create({
+    data: {
+      weight,
+      reps,
+      exerciseId: req.params.id,
+    },
+  });
+
+  return res.status(201).send(set);
+});
+
 router.get("/:id", async (req, res) => {
   const exercise = await prisma.exercise.findFirst({
     where: { id: req.params.id },
@@ -38,12 +59,14 @@ router.post("/", async (req, res) => {
     data: {
       name: req.body.name,
       ...(req.body.date && { date: new Date(req.body.date) }),
-      sets: {
-        create: req.body.sets.map((set: SetFormData) => ({
-          weight: set.weight,
-          reps: set.reps,
-        })),
-      },
+      sets: req.body.sets
+        ? {
+            create: req.body.sets.map((set: SetFormData) => ({
+              weight: set.weight,
+              reps: set.reps,
+            })),
+          }
+        : undefined,
     },
     include: {
       sets: true,
@@ -70,12 +93,14 @@ router.put("/:id", async (req, res) => {
     data: {
       name: req.body.name,
       date: new Date(req.body.date),
-      sets: {
-        create: req.body.sets.map((set: SetFormData) => ({
-          weight: set.weight,
-          reps: set.reps,
-        })),
-      },
+      sets: req.body.sets
+        ? {
+            create: req.body.sets.map((set: SetFormData) => ({
+              weight: set.weight,
+              reps: set.reps,
+            })),
+          }
+        : undefined,
     },
   });
 
