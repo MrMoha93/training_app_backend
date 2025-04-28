@@ -88,19 +88,24 @@ router.put("/:id", async (req, res) => {
 
   if (!validation.success) return res.status(400).send(validation.error.issues);
 
+  await prisma.set.deleteMany({
+    where: { exerciseId: req.params.id },
+  });
+
   const updatedExercise = await prisma.exercise.update({
     where: { id: req.params.id },
     data: {
       name: req.body.name,
       date: new Date(req.body.date),
-      sets: req.body.sets
-        ? {
-            create: req.body.sets.map((set: SetFormData) => ({
-              weight: set.weight,
-              reps: set.reps,
-            })),
-          }
-        : undefined,
+      sets: {
+        create: req.body.sets.map((set: SetFormData) => ({
+          weight: set.weight,
+          reps: set.reps,
+        })),
+      },
+    },
+    include: {
+      sets: true,
     },
   });
 
