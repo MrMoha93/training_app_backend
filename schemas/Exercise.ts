@@ -9,6 +9,7 @@ const schema = z.object({
   id: z.string().optional(),
   date: z.string().optional(),
   name: z.string().min(1, { message: "Name is required" }),
+  imageUrl: z.string().optional(),
   sets: z.array(setSchema).optional(),
 });
 
