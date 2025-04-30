@@ -58,6 +58,7 @@ router.post("/", async (req, res) => {
   const exercise = await prisma.exercise.create({
     data: {
       name: req.body.name,
+      imageUrl: req.body.imageUrl,
       ...(req.body.date && { date: new Date(req.body.date) }),
       sets: req.body.sets
         ? {
@@ -96,6 +97,7 @@ router.put("/:id", async (req, res) => {
     where: { id: req.params.id },
     data: {
       name: req.body.name,
+      imageUrl: req.body.imageUrl,
       date: new Date(req.body.date),
       sets: {
         create: req.body.sets.map((set: SetFormData) => ({
