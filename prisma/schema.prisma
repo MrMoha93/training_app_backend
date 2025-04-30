@@ -15,10 +15,11 @@ datasource db {
 }
 
 model Exercise {
-  id   String    @id @default(cuid())
-  name String
-  date DateTime?
-  sets Set[]
+  id       String    @id @default(cuid())
+  name     String
+  date     DateTime?
+  imageUrl String?
+  sets     Set[]
 }
 
 model Set {
