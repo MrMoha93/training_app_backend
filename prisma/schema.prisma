@@ -29,3 +29,20 @@ model Set {
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
 }
+
+model ExerciseInfo {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String?
+  reviews     Review[]
+}
+
+model Review {
+  id             String       @id @default(cuid())
+  rating         Int
+  comment        String?
+  createdAt      DateTime     @default(now())
+  exerciseInfoId String
+  exerciseInfo   ExerciseInfo @relation(fields: [exerciseInfoId], references: [id])
+}
