@@ -38,6 +38,15 @@ model ExerciseInfo {
   reviews     Review[]
 }
 
+model User {
+  id       String   @id @default(cuid())
+  name     String
+  username String   @unique
+  password String
+  isAdmin  Boolean  @default(false)
+  reviews  Review[]
+}
+
 model Review {
   id             String       @id @default(cuid())
   rating         Int
@@ -45,4 +54,6 @@ model Review {
   createdAt      DateTime     @default(now())
   exerciseInfoId String
   exerciseInfo   ExerciseInfo @relation(fields: [exerciseInfoId], references: [id])
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id])
 }
