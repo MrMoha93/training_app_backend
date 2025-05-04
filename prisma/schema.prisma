@@ -54,6 +54,6 @@ model Review {
   createdAt      DateTime     @default(now())
   exerciseInfoId String
   exerciseInfo   ExerciseInfo @relation(fields: [exerciseInfoId], references: [id])
-  userId         String?
-  user           User?        @relation(fields: [userId], references: [id])
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
 }
