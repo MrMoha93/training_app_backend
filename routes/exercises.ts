@@ -1,6 +1,7 @@
 import express from "express";
 import { validate } from "../schemas/Exercise";
 import { PrismaClient } from "@prisma/client";
+import auth from "../middleware/auth";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -10,14 +11,14 @@ interface SetFormData {
   reps: number;
 }
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   const exercises = await prisma.exercise.findMany({
     include: { sets: true },
   });
   return res.send(exercises);
 });
 
-router.post("/:id/sets", async (req, res) => {
+router.post("/:id/sets", auth, async (req, res) => {
   const exercise = await prisma.exercise.findFirst({
     where: { id: req.params.id },
   });
@@ -38,7 +39,7 @@ router.post("/:id/sets", async (req, res) => {
   return res.status(201).send(set);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   const exercise = await prisma.exercise.findFirst({
     where: { id: req.params.id },
     include: { sets: true },
@@ -50,7 +51,7 @@ router.get("/:id", async (req, res) => {
   return res.send(exercise);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const validation = validate(req.body);
 
   if (!validation.success) return res.status(400).send(validation.error.issues);
@@ -77,7 +78,7 @@ router.post("/", async (req, res) => {
   return res.status(201).send(exercise);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const exercise = await prisma.exercise.findFirst({
     where: { id: req.params.id },
   });
@@ -114,7 +115,7 @@ router.put("/:id", async (req, res) => {
   return res.send(updatedExercise);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const exercise = await prisma.exercise.findFirst({
     where: { id: req.params.id },
   });
