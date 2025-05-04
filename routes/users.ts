@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { validate } from "../schemas/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import newUserNotification from "../utils/newUserNotification";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -28,6 +29,8 @@ router.post("/", async (req, res) => {
       password,
     },
   });
+
+  await newUserNotification(user.name, user.username);
 
   const { password: p, ...userWithoutPassword } = user;
 
